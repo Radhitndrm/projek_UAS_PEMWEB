@@ -1,173 +1,46 @@
-import * as React from "react"
+import * as React from "react";
+import { Store } from "lucide-react";
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarRail,
+    useSidebar,
+} from "@/components/ui/sidebar";
+import { usePage } from "@inertiajs/react";
+import { SideStat } from "./sidebar-menu/side-stat";
+import { SideMaster } from "./sidebar-menu/side-master";
+import { SideTransaction } from "./sidebar-menu/side-transaction";
+import { SideStock } from "./sidebar-menu/side-stock";
+import { SideReport } from "./sidebar-menu/side-report";
+import { SideUserManagement } from "./sidebar-menu/side-user-management";
+import { SideProfile } from "./sidebar-menu/side-profile";
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from "@/components/ui/sidebar"
-
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
-  )
+    const { url } = usePage();
+    const { setOpenMobile } = useSidebar();
+    return (
+        <Sidebar collapsible="icon" {...props}>
+            <SidebarHeader className="border-b group-data-[collapsible=icon]:h-12 h-14 flex items-center justify-center dark:bg-gray-950">
+                <h1 className="text-xl group-data-[collapsible=icon]:hidden">
+                    Inventory
+                </h1>
+                <Store className="group-data-[collapsible=icon]:inline-flex hidden size-5" />
+            </SidebarHeader>
+            <SidebarContent className="dark:bg-gray-950 scrollbar-hide">
+                <SideStat url={url} setOpenMobile={setOpenMobile}/>
+                <SideMaster url={url} setOpenMobile={setOpenMobile}/>
+                <SideTransaction url={url} setOpenMobile={setOpenMobile}/>
+                <SideStock url={url} setOpenMobile={setOpenMobile}/>
+                <SideReport url={url} setOpenMobile={setOpenMobile}/>
+                <SideUserManagement url={url} setOpenMobile={setOpenMobile}/>
+            </SidebarContent>
+            <SidebarFooter className="border-t dark:bg-gray-950">
+                <SideProfile />
+            </SidebarFooter>
+            <SidebarRail />
+        </Sidebar>
+    );
 }
