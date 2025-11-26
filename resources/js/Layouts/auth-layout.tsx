@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/Components/theme-provider'
 import React from 'react'
 
 export default function AuthLayout({children} : {children: React.ReactNode}) {

@@ -1,4 +1,4 @@
-import AuthLayout from '@/layouts/auth-layout'
+import AuthLayout from '@/Layouts/auth-layout'
 import { Head, useForm } from '@inertiajs/react'
 import { AtSign, LogIn, SquareAsterisk } from 'lucide-react'
 import React from 'react'
