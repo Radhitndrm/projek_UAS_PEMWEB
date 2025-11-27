@@ -22,7 +22,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { AppLayout } from "@/layouts/app-layout";
+import { AppLayout } from "@/Layouts/app-layout";
 import { PageProps } from "@/types";
 import { Head, useForm, usePage } from "@inertiajs/react";
 import { LoaderCircle, PlusCircle, Save, X } from "lucide-react";
