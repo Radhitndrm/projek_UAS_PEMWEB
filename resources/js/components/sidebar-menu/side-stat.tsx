@@ -1,4 +1,4 @@
-import { ChartNoAxesCombined } from "lucide-react";
+import { Calculator, ChartNoAxesCombined } from "lucide-react";
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -8,21 +8,15 @@ import {
     SidebarMenuButton,
 } from "@/components/ui/sidebar";
 import { Link } from "@inertiajs/react";
-
-type sideStatProps = {
-    url: string
-    setOpenMobile: (open: boolean) => void
-}
-
-export function SideStat({ url, setOpenMobile } : sideStatProps) {
+export function SideStat({ url, setOpenMobile } : { url: string, setOpenMobile: any }) {
     return (
         <SidebarGroup>
             <SidebarGroupLabel>Stats</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild tooltip={"Dashboard"}>
-                            <Link href='' onClick={() => setOpenMobile(false)}>
+                        <SidebarMenuButton asChild tooltip={"Dashboard"} isActive={url === '/apps/dashboard'}>
+                            <Link href={route('apps.dashboard')} onClick={() => setOpenMobile(false)}>
                                 <ChartNoAxesCombined/>
                                 <span>Dashboard</span>
                             </Link>
