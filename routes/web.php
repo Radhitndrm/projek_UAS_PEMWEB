@@ -12,14 +12,11 @@ Route::get('/', function () {
     return inertia('auth/login');
 });
 
-
 Route::group(['prefix' => 'apps', 'as' => 'apps.', 'middleware' => ['auth']], function () {
     // dashboard route
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     // permission route
     Route::resource('permissions', PermissionController::class)->except(['create', 'edit', 'show']);
 });
-
-
 
 require __DIR__ . '/auth.php';
