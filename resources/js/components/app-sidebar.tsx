@@ -30,12 +30,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <Store className="group-data-[collapsible=icon]:inline-flex hidden size-5" />
             </SidebarHeader>
             <SidebarContent className="dark:bg-gray-950 scrollbar-hide">
-                <SideStat url={url} setOpenMobile={setOpenMobile}/>
-                <SideMaster url={url} setOpenMobile={setOpenMobile}/>
-                <SideTransaction url={url} setOpenMobile={setOpenMobile}/>
-                <SideStock url={url} setOpenMobile={setOpenMobile}/>
-                <SideReport url={url} setOpenMobile={setOpenMobile}/>
-                <SideUserManagement url={url} setOpenMobile={setOpenMobile}/>
+                <SideStat url={url} setOpenMobile={setOpenMobile} />
+                <SideMaster url={url} setOpenMobile={setOpenMobile} />
+                <SideTransaction url={url} setOpenMobile={setOpenMobile} />
+                <SideStock url={url} setOpenMobile={setOpenMobile} />
+                <SideReport url={url} setOpenMobile={setOpenMobile} />
+                <SideUserManagement url={url} setOpenMobile={setOpenMobile} />
             </SidebarContent>
             <SidebarFooter className="border-t dark:bg-gray-950">
                 <SideProfile />
