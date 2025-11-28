@@ -22,7 +22,7 @@ export function AppNavbar() {
         },
         {
             name: 'Master Data',
-            isActive: url.startsWith('/apps/units') || url.startsWith('/apps/categories') || url.startsWith('/apps/suppliers'),
+            isActive: url.startsWith('/apps/units') || url.startsWith('/apps/categories') || url.startsWith('/apps/suppliers') || url.startsWith('/apps/products'),
             subItems: [
                 {
                     name: 'Satuan',
@@ -41,8 +41,8 @@ export function AppNavbar() {
                 },
                 {
                     name: 'Produk',
-                    isActive: '',
-                    href: ''
+                    isActive: url.startsWith('apps/products'),
+                    href: route('apps.products.index')
                 }
             ],
         },
@@ -151,7 +151,7 @@ export function AppNavbar() {
                                         <Link href="#">{item.name}</Link>
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
-                                <BreadcrumbSeparator/>
+                                <BreadcrumbSeparator />
                                 {item.subItems
                                     .filter(subItem => subItem.isActive)
                                     .map((subItem, subIndex) => (

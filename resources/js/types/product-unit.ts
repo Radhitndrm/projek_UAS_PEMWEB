@@ -9,6 +9,7 @@ export interface ProductUnit {
     unit: Unit;
     quantity: number;
     price: number;
+    image: string | null;
     [key: string]: any;
 }
 

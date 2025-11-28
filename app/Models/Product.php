@@ -13,6 +13,7 @@ class Product extends Model
         'category_id',
         'description',
         'deleted_by',
+        'image',
     ];
 
     public function scopeSearch()
