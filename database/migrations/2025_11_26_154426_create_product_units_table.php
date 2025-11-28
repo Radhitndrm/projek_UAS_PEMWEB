@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('unit_id')->constrained('units');
             $table->double('price');
+            $table->string('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('deleted_by')->nullable()->constrained('users');

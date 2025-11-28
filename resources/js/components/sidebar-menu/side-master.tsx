@@ -11,11 +11,11 @@ import { Link } from "@inertiajs/react";
 import hasAnyPermission from "@/utils/has-permissions";
 
 type sideMasterProps = {
-    url : string;
-    setOpenMobile : (open: boolean) => void
+    url: string;
+    setOpenMobile: (open: boolean) => void
 }
 
-export function SideMaster({ url, setOpenMobile } :  sideMasterProps) {
+export function SideMaster({ url, setOpenMobile }: sideMasterProps) {
     return (
         <SidebarGroup>
             {(hasAnyPermission(['units-data']) || hasAnyPermission(['categories-data']) || hasAnyPermission(['suppliers-data']) || hasAnyPermission(['products-data'])) && (
@@ -27,7 +27,7 @@ export function SideMaster({ url, setOpenMobile } :  sideMasterProps) {
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Satuan"} isActive={url.startsWith('/apps/units')}>
                                 <Link href={route('apps.units.index')} onClick={() => setOpenMobile(false)}>
-                                    <Box/>
+                                    <Box />
                                     <span>Satuan</span>
                                 </Link>
                             </SidebarMenuButton>
@@ -37,7 +37,7 @@ export function SideMaster({ url, setOpenMobile } :  sideMasterProps) {
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Kategori"} isActive={url.startsWith('/apps/categories')}>
                                 <Link href={route('apps.categories.index')} onClick={() => setOpenMobile(false)}>
-                                    <Tags/>
+                                    <Tags />
                                     <span>Kategori</span>
                                 </Link>
                             </SidebarMenuButton>
@@ -47,7 +47,7 @@ export function SideMaster({ url, setOpenMobile } :  sideMasterProps) {
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Supplier"} isActive={url.startsWith('/apps/suppliers')}>
                                 <Link href={route('apps.suppliers.index')} onClick={() => setOpenMobile(false)}>
-                                    <NotebookPen/>
+                                    <NotebookPen />
                                     <span>Supplier</span>
                                 </Link>
                             </SidebarMenuButton>
@@ -55,9 +55,9 @@ export function SideMaster({ url, setOpenMobile } :  sideMasterProps) {
                     )}
                     {hasAnyPermission(['products-data']) &&
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Produk"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
-                                    <Package/>
+                            <SidebarMenuButton asChild tooltip={"Produk"} isActive={url.startsWith('/apps/products')}>
+                                <Link href={route('apps.products.index')} onClick={() => setOpenMobile(false)}>
+                                    <Package />
                                     <span>Produk</span>
                                 </Link>
                             </SidebarMenuButton>

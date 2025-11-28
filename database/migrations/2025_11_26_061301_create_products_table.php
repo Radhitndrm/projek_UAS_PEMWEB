@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('category_id')->constrained('categories');
             $table->text('description')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('deleted_by')->nullable()->constrained('users');

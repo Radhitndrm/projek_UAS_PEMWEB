@@ -9,6 +9,7 @@ export interface Product {
     category: Category;
     product_units: ProductUnit[]
     price: number;
+    image: string | null,
     [key: string]: any;
 }
 
