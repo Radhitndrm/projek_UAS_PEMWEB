@@ -85,11 +85,11 @@ export function AppNavbar() {
         },
         {
             name: "Manajemen Pengguna",
-            isActive: "",
+            isActive: url.startsWith('/apps/permissions'),
             subItems: [
                 {
                     name: "Hak Akses",
-                    isActive: "",
+                    isActive: url.startsWith('/apps/permissions'),
                     href: "",
                 },
                 {

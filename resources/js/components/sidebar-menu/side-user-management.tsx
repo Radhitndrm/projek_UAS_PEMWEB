@@ -37,8 +37,8 @@ export function SideUserManagement({ url, setOpenMobile }: sideUserManagementPro
                     )}
                     {hasAnyPermission(["permissions-data"]) && (
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Hak Akses"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
+                            <SidebarMenuButton asChild tooltip={"Hak Akses"} isActive={url.startsWith('/apps/permissions')}>
+                                <Link href={route('apps.permissions.index')} onClick={() => setOpenMobile(false)}>
                                     <UserRoundCheck />
                                     <span>Hak Akses</span>
                                 </Link>
