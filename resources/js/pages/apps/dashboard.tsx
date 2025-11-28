@@ -1,12 +1,33 @@
 import { Box, ShoppingBag, ReceiptText, Coins } from "lucide-react";
-import AppLayout from "@/layouts/app-layout";
+import AppLayout from "@/Layouts/app-layout";
 import { Head, usePage } from "@inertiajs/react";
 import { Header } from "@/components/header";
 import { Widget } from "@/components/widget";
-import { CardHeader, Card, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import {
+    CardHeader,
+    Card,
+    CardTitle,
+    CardContent,
+    CardDescription,
+} from "@/components/ui/card";
 import { PageProps } from "@/types";
-import { Bar, BarChart, CartesianGrid, XAxis, LabelList, Pie, PieChart } from "recharts";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    XAxis,
+    LabelList,
+    Pie,
+    PieChart,
+} from "recharts";
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+    ChartLegend,
+    ChartLegendContent,
+} from "@/components/ui/chart";
 
 interface DashboardProps extends PageProps {
     totalPurchaseThisMonth: number;
@@ -17,7 +38,7 @@ interface DashboardProps extends PageProps {
         out_stock: number;
     }[];
     totalRevenueThisMonth: number;
-    bestSellingProduct : {
+    bestSellingProduct: {
         product: string;
         quantity: number;
         fill: string;
@@ -25,8 +46,13 @@ interface DashboardProps extends PageProps {
 }
 
 export default function Dashboard() {
-
-    const { totalRevenueThisMonth, stockMovements, totalPurchaseThisMonth, totalSalesThisMonth, bestSellingProduct } = usePage<DashboardProps>().props;
+    const {
+        totalRevenueThisMonth,
+        stockMovements,
+        totalPurchaseThisMonth,
+        totalSalesThisMonth,
+        bestSellingProduct,
+    } = usePage<DashboardProps>().props;
 
     const chartConfig = {
         in_stock: {
@@ -58,28 +84,35 @@ export default function Dashboard() {
         "hsl(var(--chart-3))",
         "hsl(var(--chart-4))",
         "hsl(var(--chart-5))",
-    ]
+    ];
 
-    const chartDataBestSellingProduct = bestSellingProduct.map((item, index) => ({
-        product: item.product,
-        total: item.quantity,
-        fill: bestSellingProductcolors[index % bestSellingProductcolors.length],
-    }))
+    const chartDataBestSellingProduct = bestSellingProduct.map(
+        (item, index) => ({
+            product: item.product,
+            total: item.quantity,
+            fill: bestSellingProductcolors[
+                index % bestSellingProductcolors.length
+            ],
+        })
+    );
 
     return (
         <>
             <Head title="Dashboard" />
             <div className="w-full">
-                <Header title="Dashboard" subtitle="Halaman ini digunakan untuk melihat statistik keseluruhan data"/>
+                <Header
+                    title="Dashboard"
+                    subtitle="Halaman ini digunakan untuk melihat statistik keseluruhan data"
+                />
                 <div className="p-6">
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                        <Widget title="Total Pendapatan" icon={<Coins/>}>
+                        <Widget title="Total Pendapatan" icon={<Coins />}>
                             <sup>Rp</sup> {totalRevenueThisMonth}
                         </Widget>
-                        <Widget title="Total Penjualan" icon={<ReceiptText/>}>
+                        <Widget title="Total Penjualan" icon={<ReceiptText />}>
                             <sup>Rp</sup> {totalSalesThisMonth}
                         </Widget>
-                        <Widget title="Total Pembelian" icon={<ShoppingBag/>}>
+                        <Widget title="Total Pembelian" icon={<ShoppingBag />}>
                             <sup>Rp</sup> {totalPurchaseThisMonth}
                         </Widget>
                     </div>
@@ -88,10 +121,17 @@ export default function Dashboard() {
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Statistik Stok Produk</CardTitle>
-                                    <CardDescription>Statistik ini digunakan untuk melihat pergerakan stok produk dalam 6 bulan terakhir</CardDescription>
+                                    <CardDescription>
+                                        Statistik ini digunakan untuk melihat
+                                        pergerakan stok produk dalam 6 bulan
+                                        terakhir
+                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <ChartContainer config={chartConfig} className="min-h-full lg:min-h-[200px] w-full">
+                                    <ChartContainer
+                                        config={chartConfig}
+                                        className="min-h-full lg:min-h-[200px] w-full"
+                                    >
                                         <BarChart data={chartData}>
                                             <CartesianGrid vertical={false} />
                                             <XAxis
@@ -99,10 +139,22 @@ export default function Dashboard() {
                                                 tickLine={false}
                                                 tickMargin={10}
                                                 axisLine={false}
-                                                tickFormatter={(value) => value.slice(0, 3)}
+                                                tickFormatter={(value) =>
+                                                    value.slice(0, 3)
+                                                }
                                             />
-                                            <ChartTooltip content={<ChartTooltipContent />} />
-                                            <Bar dataKey="in_stock" fill={chartConfig.in_stock.color} radius={4}>
+                                            <ChartTooltip
+                                                content={
+                                                    <ChartTooltipContent />
+                                                }
+                                            />
+                                            <Bar
+                                                dataKey="in_stock"
+                                                fill={
+                                                    chartConfig.in_stock.color
+                                                }
+                                                radius={4}
+                                            >
                                                 <LabelList
                                                     position="top"
                                                     offset={12}
@@ -110,7 +162,13 @@ export default function Dashboard() {
                                                     fontSize={12}
                                                 />
                                             </Bar>
-                                            <Bar dataKey="out_stock" fill={chartConfig.out_stock.color} radius={4}>
+                                            <Bar
+                                                dataKey="out_stock"
+                                                fill={
+                                                    chartConfig.out_stock.color
+                                                }
+                                                radius={4}
+                                            >
                                                 <LabelList
                                                     position="top"
                                                     offset={12}
@@ -126,32 +184,55 @@ export default function Dashboard() {
                         <div className="col-span-6">
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Statistik Produk Paling Laris</CardTitle>
-                                    <CardDescription>Statistik ini digunakan untuk melihat 5 data produk paling laris</CardDescription>
+                                    <CardTitle>
+                                        Statistik Produk Paling Laris
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Statistik ini digunakan untuk melihat 5
+                                        data produk paling laris
+                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <ChartContainer config={bestSellingChartConfig} className="min-h-full lg:min-h-[200px] w-full">
+                                    <ChartContainer
+                                        config={bestSellingChartConfig}
+                                        className="min-h-full lg:min-h-[200px] w-full"
+                                    >
                                         <PieChart>
-                                            <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                                            <ChartTooltip
+                                                content={
+                                                    <ChartTooltipContent
+                                                        hideLabel
+                                                    />
+                                                }
+                                            />
                                             <Pie
-                                                data={chartDataBestSellingProduct}
+                                                data={
+                                                    chartDataBestSellingProduct
+                                                }
                                                 dataKey="total"
                                                 labelLine={false}
                                                 nameKey="product"
-                                                label={({ payload, ...props }) => {
+                                                label={({
+                                                    payload,
+                                                    ...props
+                                                }) => {
                                                     return (
                                                         <text
-                                                        cx={props.cx}
-                                                        cy={props.cy}
-                                                        x={props.x}
-                                                        y={props.y}
-                                                        textAnchor={props.textAnchor}
-                                                        dominantBaseline={props.dominantBaseline}
-                                                        fill="hsla(var(--foreground)"
+                                                            cx={props.cx}
+                                                            cy={props.cy}
+                                                            x={props.x}
+                                                            y={props.y}
+                                                            textAnchor={
+                                                                props.textAnchor
+                                                            }
+                                                            dominantBaseline={
+                                                                props.dominantBaseline
+                                                            }
+                                                            fill="hsla(var(--foreground)"
                                                         >
-                                                        {payload.total}
+                                                            {payload.total}
                                                         </text>
-                                                    )
+                                                    );
                                                 }}
                                             />
                                         </PieChart>

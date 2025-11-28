@@ -16,28 +16,30 @@ export function AppNavbar() {
     const BreadcrumbItems = [
         {
             name: "Stats",
-            isActive: url === "",
+            isActive: url === "/apps/dashboard",
             subItems: [
                 {
                     name: "Dashboard",
-                    isActive: url === "",
-                    href: "",
+                    isActive: url === "/apps/dashboard",
+                    href: route("apps.dashboard"),
                 },
             ],
         },
         {
             name: "Master Data",
-            isActive: "",
+            isActive:
+                url.startsWith("/apps/units") ||
+                url.startsWith("/apps/categories"),
             subItems: [
                 {
                     name: "Satuan",
-                    isActive: "",
-                    href: "",
+                    isActive: url.startsWith("/apps/units"),
+                    href: route("apps.units.index"),
                 },
                 {
                     name: "Kategori",
-                    isActive: "",
-                    href: "",
+                    isActive: url.startsWith("/apps/categories"),
+                    href: route("apps.categories.index"),
                 },
                 {
                     name: "Supplier",
@@ -85,12 +87,15 @@ export function AppNavbar() {
         },
         {
             name: "Manajemen Pengguna",
-            isActive: url.startsWith('/apps/permissions'),
+            isActive:
+                url.startsWith("/apps/permissions") ||
+                url.startsWith("/apps/roles") ||
+                url.startsWith("/apps/users"),
             subItems: [
                 {
                     name: "Hak Akses",
-                    isActive: url.startsWith('/apps/permissions'),
-                    href: "",
+                    isActive: url.startsWith("/apps/permissions"),
+                    href: route("apps.permissions.index"),
                 },
                 {
                     name: "Akses Group",
@@ -99,8 +104,8 @@ export function AppNavbar() {
                 },
                 {
                     name: "Pengguna",
-                    isActive: "",
-                    href: "",
+                    isActive: url.startsWith("/apps/users"),
+                    href: route("apps.users.index"),
                 },
             ],
         },
