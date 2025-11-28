@@ -1,5 +1,5 @@
 import React from "react"
-import AppLayout from "@/layouts/app-layout"
+import AppLayout from "@/Layouts/app-layout"
 import { Head, Link, useForm } from "@inertiajs/react"
 import { Header } from "@/components/header"
 import {
