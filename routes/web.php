@@ -18,6 +18,8 @@ Route::group(['prefix' => 'apps', 'as' => 'apps.', 'middleware' => ['auth']], fu
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::resource('roles', RoleController::class)->except('show');
+
+    Route::resource('permissions', PermissionController::class)->except('show');
 });
 
 
