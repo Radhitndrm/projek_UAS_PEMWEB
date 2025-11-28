@@ -37,7 +37,7 @@ export default function Create({ permissions }: Props) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         selectedPermissions: [] as string[],
-    })
+    });
 
     // pilih semua / batal pilih semua
     const selectAllPermission = (checked: boolean) => {
@@ -74,7 +74,8 @@ export default function Create({ permissions }: Props) {
                         <CardHeader>
                             <CardTitle>Tambah Akses Group</CardTitle>
                             <CardDescription>
-                                Form ini digunakan untuk menambahkan data akses group
+                                Form ini digunakan untuk menambahkan data akses
+                                group
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -110,7 +111,6 @@ export default function Create({ permissions }: Props) {
                                                                 onCheckedChange={selectAllPermission}
                                                             />
                                                         </TableHead>
-                                                        <TableHead>Nama Hak Akses</TableHead>
                                                     </TableRow>
                                                 </TableHeader>
                                                 <TableBody>
@@ -172,7 +172,7 @@ export default function Create({ permissions }: Props) {
                 </div>
             </div>
         </>
-    )
+    );
 }
 
 Create.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>

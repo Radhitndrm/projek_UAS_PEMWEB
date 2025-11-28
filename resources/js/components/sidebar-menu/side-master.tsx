@@ -35,8 +35,8 @@ export function SideMaster({ url, setOpenMobile } :  sideMasterProps) {
                     )}
                     {hasAnyPermission(['categories-data']) && (
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Kategori"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
+                            <SidebarMenuButton asChild tooltip={"Kategori"} isActive={url.startsWith('/apps/categories')}>
+                                <Link href={route('apps.categories.index')} onClick={() => setOpenMobile(false)}>
                                     <Tags/>
                                     <span>Kategori</span>
                                 </Link>
