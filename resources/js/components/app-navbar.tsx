@@ -85,7 +85,7 @@ export function AppNavbar() {
         },
         {
             name: "Manajemen Pengguna",
-            isActive: url.startsWith('/apps/permissions'),
+            isActive: url.startsWith('/apps/permissions') || url.startsWith('/apps/roles') || url.startsWith('/apps/users'),
             subItems: [
                 {
                     name: "Hak Akses",
@@ -99,8 +99,8 @@ export function AppNavbar() {
                 },
                 {
                     name: "Pengguna",
-                    isActive: "",
-                    href: "",
+                    isActive: url.startsWith('apps/users'),
+                    href: route('apps.users.index'),
                 },
             ],
         },

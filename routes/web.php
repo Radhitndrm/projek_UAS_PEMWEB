@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Apps\DashboardController;
 use App\Http\Controllers\Apps\RoleController;
+use App\Http\Controllers\Apps\UserController;
 
 Route::get('/', function () {
     if (Auth::check())
@@ -20,8 +21,8 @@ Route::group(['prefix' => 'apps', 'as' => 'apps.', 'middleware' => ['auth']], fu
     Route::resource('roles', RoleController::class)->except('show');
 
     Route::resource('permissions', PermissionController::class)->except('show');
+    Route::resource('users', UserController::class);
 });
 
 
 require __DIR__ . '/auth.php';
-
