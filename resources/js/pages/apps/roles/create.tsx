@@ -1,16 +1,16 @@
-import React from "react";
-import AppLayout from "@/Layouts/app-layout";
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import { Header } from "@/components/header";
+import React from "react"
+import AppLayout from "@/layouts/app-layout"
+import { Head, Link, useForm } from "@inertiajs/react"
+import { Header } from "@/components/header"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 import {
     Table,
     TableHeader,
@@ -18,47 +18,36 @@ import {
     TableHead,
     TableBody,
     TableCell,
-    TableCard,
-} from "@/components/ui/table";
-import { PageProps } from "@/types";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, LoaderCircle, Save } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { Permission } from "@/types/permission";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { ArrowLeft, Save, LoaderCircle } from "lucide-react"
+import { TableCard } from "@/components/ui/table"
+import { toast } from "@/hooks/use-toast"
 
-interface CreateProps extends PageProps {
-    permissions: Permission[];
+interface Permission {
+    name: string
 }
 
-export default function Create() {
-    const { toast } = useToast();
-    const { permissions } = usePage<CreateProps>().props;
+interface Props {
+    permissions: Permission[]
+}
+
+export default function Create({ permissions }: Props) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         selectedPermissions: [] as string[],
     });
 
-    const selectedPermission = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let permissionIds = data.selectedPermissions;
+    // pilih semua / batal pilih semua
+    const selectAllPermission = (checked: boolean) => {
+        const permissionsIds = permissions.map((permission) => permission.name)
+        setData("selectedPermissions", checked ? permissionsIds : [])
+    }
 
-        if (permissionIds.some((name) => name === e.target.value))
-            permissionIds = permissionIds.filter(
-                (name) => name !== e.target.value
-            );
-        else permissionIds.push(e.target.value);
-
-        setData("selectedPermissions", permissionIds);
-    };
-
-    const selectAllPermission = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const permissionsIds = permissions.map((permission) => permission.name);
-
-        setData("selectedPermissions", e.target.checked ? permissionsIds : []);
-    };
-
+    // submit data
     const storeData = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+        e.preventDefault()
 
         post(route("apps.roles.store"), {
             onSuccess: () => {
@@ -66,11 +55,11 @@ export default function Create() {
                     variant: "success",
                     title: "Success",
                     description: "Data berhasil disimpan",
-                }),
-                    reset();
+                })
+                reset()
             },
-        });
-    };
+        })
+    }
 
     return (
         <>
@@ -92,6 +81,7 @@ export default function Create() {
                         <CardContent>
                             <div className="w-full">
                                 <form onSubmit={storeData}>
+                                    {/* Nama Group */}
                                     <div className="mb-4 flex flex-col gap-2">
                                         <Label>Nama Akses Group</Label>
                                         <Input
@@ -99,15 +89,13 @@ export default function Create() {
                                             autoComplete="off"
                                             name="name"
                                             value={data.name}
-                                            onChange={(e) =>
-                                                setData("name", e.target.value)
-                                            }
+                                            onChange={(e) => setData("name", e.target.value)}
                                             placeholder="Masukan nama akses group"
                                         />
-                                        <p className="text-red-500 text-xs">
-                                            {errors.name}
-                                        </p>
+                                        <p className="text-red-500 text-xs">{errors.name}</p>
                                     </div>
+
+                                    {/* Permissions */}
                                     <div className="mb-4 flex flex-col gap-2">
                                         <Label>Hak Akses</Label>
                                         <TableCard>
@@ -116,51 +104,39 @@ export default function Create() {
                                                     <TableRow>
                                                         <TableHead className="w-[50px] text-center">
                                                             <Checkbox
-                                                                onChange={(e) =>
-                                                                    selectAllPermission(
-                                                                        e
-                                                                    )
-                                                                }
                                                                 checked={
-                                                                    data
-                                                                        .selectedPermissions
-                                                                        .length ===
+                                                                    data.selectedPermissions.length ===
                                                                     permissions.length
                                                                 }
+                                                                onCheckedChange={selectAllPermission}
                                                             />
-                                                        </TableHead>
-                                                        <TableHead>
-                                                            Nama Hak Akses
                                                         </TableHead>
                                                     </TableRow>
                                                 </TableHeader>
                                                 <TableBody>
-                                                    {permissions.map(
-                                                        (permission, i) => (
-                                                            <TableRow key={i}>
-                                                                <TableCell className="w-[50px] text-center">
-                                                                    <Checkbox
-                                                                        checked={data.selectedPermissions.includes(
-                                                                            permission.name
-                                                                        )}
-                                                                        onChange={
-                                                                            selectedPermission
-                                                                        }
-                                                                        key={i}
-                                                                        value={
-                                                                            permission.name
-                                                                        }
-                                                                        id={`permission-${i}`}
-                                                                    />
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {
+                                                    {permissions.map((permission, i) => (
+                                                        <TableRow key={i}>
+                                                            <TableCell className="w-[50px] text-center">
+                                                                <Checkbox
+                                                                    checked={data.selectedPermissions.includes(
                                                                         permission.name
-                                                                    }
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        )
-                                                    )}
+                                                                    )}
+                                                                    onCheckedChange={(checked) => {
+                                                                        setData(
+                                                                            "selectedPermissions",
+                                                                            checked
+                                                                                ? [...data.selectedPermissions, permission.name]
+                                                                                : data.selectedPermissions.filter(
+                                                                                    (p) => p !== permission.name
+                                                                                )
+                                                                        )
+                                                                    }}
+                                                                    id={`permission-${i}`}
+                                                                />
+                                                            </TableCell>
+                                                            <TableCell>{permission.name}</TableCell>
+                                                        </TableRow>
+                                                    ))}
                                                 </TableBody>
                                             </Table>
                                         </TableCard>
@@ -168,6 +144,8 @@ export default function Create() {
                                             {errors.selectedPermissions}
                                         </p>
                                     </div>
+
+                                    {/* Action Buttons */}
                                     <div className="flex items-center gap-2">
                                         <Button variant="danger" asChild>
                                             <Link href="/apps/roles">
@@ -197,4 +175,4 @@ export default function Create() {
     );
 }
 
-Create.layout = (page: React.ReactNode) => <AppLayout children={page} />;
+Create.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>

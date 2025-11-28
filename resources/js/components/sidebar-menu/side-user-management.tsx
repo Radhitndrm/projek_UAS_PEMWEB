@@ -21,8 +21,8 @@ export function SideUserManagement({ url, setOpenMobile }: sideUserManagementPro
             {(hasAnyPermission(["permissions-data"]) ||
                 hasAnyPermission(["users-data"]) ||
                 hasAnyPermission(["roles-data"])) && (
-                <SidebarGroupLabel>Manajemen Pengguna</SidebarGroupLabel>
-            )}
+                    <SidebarGroupLabel>Manajemen Pengguna</SidebarGroupLabel>
+                )}
             <SidebarGroupContent>
                 <SidebarMenu>
                     {hasAnyPermission(["roles-data"]) && (
@@ -47,8 +47,8 @@ export function SideUserManagement({ url, setOpenMobile }: sideUserManagementPro
                     )}
                     {hasAnyPermission(["users-data"]) && (
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Pengguna"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
+                            <SidebarMenuButton asChild tooltip={"Pengguna"} isActive={url.startsWith('/apps/users')}>
+                                <Link href={route('apps.users.index')} onClick={() => setOpenMobile(false)}>
                                     <Users2 />
                                     <span>Pengguna</span>
                                 </Link>
