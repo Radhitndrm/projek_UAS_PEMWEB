@@ -12,13 +12,10 @@ import hasAnyPermission from "@/utils/has-permissions";
 
 type sideUserManagementProps = {
     url: string;
-    setOpenMobile: (open: boolean) => void;
-};
+    setOpenMobile: (open: boolean) => void
+}
 
-export function SideUserManagement({
-    url,
-    setOpenMobile,
-}: sideUserManagementProps) {
+export function SideUserManagement({ url, setOpenMobile }: sideUserManagementProps) {
     return (
         <SidebarGroup>
             {(hasAnyPermission(["permissions-data"]) ||
@@ -30,11 +27,8 @@ export function SideUserManagement({
                 <SidebarMenu>
                     {hasAnyPermission(["roles-data"]) && (
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Akses Group"}>
-                                <Link
-                                    href=""
-                                    onClick={() => setOpenMobile(false)}
-                                >
+                            <SidebarMenuButton asChild tooltip={"Akses Group"} isActive={url.startsWith('/apps/roles')}>
+                                <Link href={route('apps.roles.index')} onClick={() => setOpenMobile(false)}>
                                     <UserCog />
                                     <span>Akses Group</span>
                                 </Link>
@@ -43,15 +37,8 @@ export function SideUserManagement({
                     )}
                     {hasAnyPermission(["permissions-data"]) && (
                         <SidebarMenuItem>
-                            <SidebarMenuButton
-                                asChild
-                                tooltip={"Hak Akses"}
-                                isActive={url.startsWith("/apps/permissions")}
-                            >
-                                <Link
-                                    href={route("apps.permissions.index")}
-                                    onClick={() => setOpenMobile(false)}
-                                >
+                            <SidebarMenuButton asChild tooltip={"Hak Akses"}>
+                                <Link href='' onClick={() => setOpenMobile(false)}>
                                     <UserRoundCheck />
                                     <span>Hak Akses</span>
                                 </Link>
@@ -61,10 +48,7 @@ export function SideUserManagement({
                     {hasAnyPermission(["users-data"]) && (
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Pengguna"}>
-                                <Link
-                                    href=""
-                                    onClick={() => setOpenMobile(false)}
-                                >
+                                <Link href='' onClick={() => setOpenMobile(false)}>
                                     <Users2 />
                                     <span>Pengguna</span>
                                 </Link>

@@ -61,9 +61,9 @@ export function AppNavbar() {
                     href: "",
                 },
                 {
-                    name: "Penjualan",
-                    isActive: "",
-                    href: "",
+                    name: 'Akses Group',
+                    isActive: url.startsWith('/apps/roles'),
+                    href: route('apps.roles.index')
                 },
             ],
         },
@@ -148,35 +148,30 @@ export function AppNavbar() {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
                 <BreadcrumbList>
-                    {BreadcrumbItems.map(
-                        (item, index) =>
-                            item.isActive &&
-                            item.subItems.find(
-                                (subItem) => subItem.isActive
-                            ) && (
-                                <React.Fragment key={index}>
-                                    <BreadcrumbItem>
-                                        <BreadcrumbLink asChild>
-                                            <Link href="#">{item.name}</Link>
-                                        </BreadcrumbLink>
-                                    </BreadcrumbItem>
-                                    <BreadcrumbSeparator />
-                                    {item.subItems
-                                        .filter((subItem) => subItem.isActive)
-                                        .map((subItem, subIndex) => (
-                                            <BreadcrumbItem key={subIndex}>
-                                                <BreadcrumbLink asChild>
-                                                    <Link href={subItem.href}>
-                                                        {subItem.name}
-                                                    </Link>
-                                                </BreadcrumbLink>
-                                            </BreadcrumbItem>
-                                        ))}
-                                </React.Fragment>
-                            )
-                    )}
+                    {BreadcrumbItems.map((item, index) => (
+                        item.isActive && item.subItems.find(subItem => subItem.isActive) && (
+                            <React.Fragment key={index}>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink asChild>
+                                        <Link href="#">{item.name}</Link>
+                                    </BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                {item.subItems
+                                    .filter(subItem => subItem.isActive)
+                                    .map((subItem, subIndex) => (
+                                        <BreadcrumbItem key={subIndex}>
+                                            <BreadcrumbLink asChild>
+                                                <Link href={subItem.href}>{subItem.name}</Link>
+                                            </BreadcrumbLink>
+                                        </BreadcrumbItem>
+                                    ))
+                                }
+                            </React.Fragment>
+                        )
+                    ))}
                 </BreadcrumbList>
             </Breadcrumb>
         </div>
-    );
+    )
 }
