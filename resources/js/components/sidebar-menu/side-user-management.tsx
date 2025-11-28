@@ -11,11 +11,11 @@ import { Link } from "@inertiajs/react";
 import hasAnyPermission from "@/utils/has-permissions";
 
 type sideUserManagementProps = {
-    url : string;
-    setOpenMobile : (open : boolean) => void
+    url: string;
+    setOpenMobile: (open: boolean) => void
 }
 
-export function SideUserManagement({ url, setOpenMobile } : sideUserManagementProps) {
+export function SideUserManagement({ url, setOpenMobile }: sideUserManagementProps) {
     return (
         <SidebarGroup>
             {(hasAnyPermission(['permissions-data']) || hasAnyPermission(['users-data']) || hasAnyPermission(['roles-data'])) && (
@@ -25,9 +25,9 @@ export function SideUserManagement({ url, setOpenMobile } : sideUserManagementPr
                 <SidebarMenu>
                     {hasAnyPermission(['roles-data']) &&
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Akses Group"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
-                                    <UserCog/>
+                            <SidebarMenuButton asChild tooltip={"Akses Group"} isActive={url.startsWith('/apps/roles')}>
+                                <Link href={route('apps.roles.index')} onClick={() => setOpenMobile(false)}>
+                                    <UserCog />
                                     <span>Akses Group</span>
                                 </Link>
                             </SidebarMenuButton>
@@ -37,7 +37,7 @@ export function SideUserManagement({ url, setOpenMobile } : sideUserManagementPr
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Hak Akses"}>
                                 <Link href='' onClick={() => setOpenMobile(false)}>
-                                    <UserRoundCheck/>
+                                    <UserRoundCheck />
                                     <span>Hak Akses</span>
                                 </Link>
                             </SidebarMenuButton>
@@ -47,7 +47,7 @@ export function SideUserManagement({ url, setOpenMobile } : sideUserManagementPr
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Pengguna"}>
                                 <Link href='' onClick={() => setOpenMobile(false)}>
-                                    <Users2/>
+                                    <Users2 />
                                     <span>Pengguna</span>
                                 </Link>
                             </SidebarMenuButton>

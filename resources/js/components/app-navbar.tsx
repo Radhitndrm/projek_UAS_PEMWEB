@@ -89,8 +89,8 @@ export function AppNavbar() {
                 },
                 {
                     name: 'Akses Group',
-                    isActive: '',
-                    href: ''
+                    isActive: url.startsWith('/apps/roles'),
+                    href: route('apps.roles.index')
                 },
                 {
                     name: 'Pengguna',
@@ -151,7 +151,7 @@ export function AppNavbar() {
                                         <Link href="#">{item.name}</Link>
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
-                                <BreadcrumbSeparator/>
+                                <BreadcrumbSeparator />
                                 {item.subItems
                                     .filter(subItem => subItem.isActive)
                                     .map((subItem, subIndex) => (
