@@ -41,7 +41,8 @@ class DashboardController extends Controller
             )
             ->where('movement_date', '>=', DB::raw("DATE_SUB(NOW(), INTERVAL 6 MONTH)"))
             ->groupBy(DB::raw("DATE_FORMAT(movement_date, '%M')"))
-            ->orderBy(DB::raw("DATE_FORMAT(movement_date, '%m')"))
+            // PERBAIKAN ADA DI BARIS DI BAWAH INI:
+            ->orderBy(DB::raw("MIN(movement_date)"), 'asc')
             ->get()
             ->map(function ($item) {
                 return [

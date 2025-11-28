@@ -18,12 +18,14 @@ type sideUserManagementProps = {
 export function SideUserManagement({ url, setOpenMobile }: sideUserManagementProps) {
     return (
         <SidebarGroup>
-            {(hasAnyPermission(['permissions-data']) || hasAnyPermission(['users-data']) || hasAnyPermission(['roles-data'])) && (
+            {(hasAnyPermission(["permissions-data"]) ||
+                hasAnyPermission(["users-data"]) ||
+                hasAnyPermission(["roles-data"])) && (
                 <SidebarGroupLabel>Manajemen Pengguna</SidebarGroupLabel>
             )}
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {hasAnyPermission(['roles-data']) &&
+                    {hasAnyPermission(["roles-data"]) && (
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Akses Group"} isActive={url.startsWith('/apps/roles')}>
                                 <Link href={route('apps.roles.index')} onClick={() => setOpenMobile(false)}>
@@ -32,8 +34,8 @@ export function SideUserManagement({ url, setOpenMobile }: sideUserManagementPro
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
-                    }
-                    {hasAnyPermission(['permissions-data']) &&
+                    )}
+                    {hasAnyPermission(["permissions-data"]) && (
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Hak Akses"}>
                                 <Link href='' onClick={() => setOpenMobile(false)}>
@@ -42,8 +44,8 @@ export function SideUserManagement({ url, setOpenMobile }: sideUserManagementPro
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
-                    }
-                    {hasAnyPermission(['users-data']) &&
+                    )}
+                    {hasAnyPermission(["users-data"]) && (
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Pengguna"}>
                                 <Link href='' onClick={() => setOpenMobile(false)}>
@@ -52,7 +54,7 @@ export function SideUserManagement({ url, setOpenMobile }: sideUserManagementPro
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
-                    }
+                    )}
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
