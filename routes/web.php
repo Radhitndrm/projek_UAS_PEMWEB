@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Apps\RoleController;
+use App\Http\Controllers\Apps\SaleController;
 use App\Http\Controllers\Apps\UnitController;
 use App\Http\Controllers\Apps\UserController;
 use App\Http\Controllers\Apps\OrderController;
@@ -13,15 +14,16 @@ use App\Http\Controllers\Apps\SupplierController;
 use App\Http\Controllers\Apps\DashboardController;
 use App\Http\Controllers\Apps\PermissionController;
 use App\Http\Controllers\Apps\ProductUnitController;
+use App\Http\Controllers\Apps\OrderReceiveController;
 
-Route::get('/', function () {
-    if (Auth::check())
+Route::get('/', function(){
+    if(Auth::check())
         return to_route('apps.dashboard');
 
     return inertia('auth/login');
 });
 
-Route::group(['prefix' => 'apps', 'as' => 'apps.', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'apps', 'as' => 'apps.', 'middleware' => ['auth']], function(){
     // dashboard route
     Route::get('dashboard', DashboardController::class)->name('dashboard');
     // unit route
@@ -47,10 +49,15 @@ Route::group(['prefix' => 'apps', 'as' => 'apps.', 'middleware' => ['auth']], fu
         Route::get('/stocks/stock-initials', 'stockInitialView')->name('stock-initials');
         Route::post('/stocks/stock-initials', 'stockInitialStore')->name('store-initials');
     });
+    // sale route
+    Route::resource('/sales', SaleController::class)->only('index', 'create', 'store', 'show');
     // order route
     Route::get('/orders/{order}/get-order-details', [OrderController::class, 'getOrderDetails'])->name('orders.get-order-details');
     Route::put('/orders/{order}/update-status/{status}', [OrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::resource('/orders', OrderController::class);
+    // order receive route
+    Route::put('/order-receives/{orderReceive}/update-status/{status}', [OrderReceiveController::class, 'updateStatus'])->name('order-receives.update-status');
+    Route::resource('/order-receives', OrderReceiveController::class)->parameters(['order-receives' => 'orderReceive']);
     // permission route
     Route::resource('permissions', PermissionController::class)->except(['create', 'edit', 'show']);
     // role route
@@ -59,4 +66,4 @@ Route::group(['prefix' => 'apps', 'as' => 'apps.', 'middleware' => ['auth']], fu
     Route::resource('users', UserController::class);
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
