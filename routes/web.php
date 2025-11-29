@@ -8,6 +8,7 @@ use App\Http\Controllers\Apps\UnitController;
 use App\Http\Controllers\Apps\UserController;
 use App\Http\Controllers\Apps\OrderController;
 use App\Http\Controllers\Apps\StockController;
+use App\Http\Controllers\Apps\ReportController;
 use App\Http\Controllers\Apps\ProductController;
 use App\Http\Controllers\Apps\CategoryController;
 use App\Http\Controllers\Apps\SupplierController;
@@ -58,6 +59,21 @@ Route::group(['prefix' => 'apps', 'as' => 'apps.', 'middleware' => ['auth']], fu
     // order receive route
     Route::put('/order-receives/{orderReceive}/update-status/{status}', [OrderReceiveController::class, 'updateStatus'])->name('order-receives.update-status');
     Route::resource('/order-receives', OrderReceiveController::class)->parameters(['order-receives' => 'orderReceive']);
+    // report route
+    Route::controller(ReportController::class)->prefix('reports')->name('reports.')->group(function () {
+        Route::get('/card-stocks', 'cardStockView')->name('card-stocks');
+        Route::get('/card-stocks-reports', 'cardStockReport')->name('card-stocks-reports');
+        Route::get('/stocks', 'stockView')->name('stocks');
+        Route::get('/stocks-reports', 'stockReport')->name('stocks-reports');
+        Route::get('/orders', 'orderView')->name('orders');
+        Route::get('/order-reports', 'orderReport')->name('order-reports');
+        Route::get('/pending-order-receives', 'pendingOrderReceiveView')->name('pending-order-receives');
+        Route::get('/pending-order-receives-reports', 'pendingOrderReceiveReport')->name('pending-order-receives-reports');
+        Route::get('/sales', 'salesView')->name('sales');
+        Route::get('/sales-reports', 'salesReport')->name('sales-reports');
+        Route::get('/best-selling-products', 'bestSellingProductView')->name('best-selling-products');
+        Route::get('/best-selling-products-reports', 'bestSellingProductReport')->name('best-selling-products-reports');
+    });
     // permission route
     Route::resource('permissions', PermissionController::class)->except(['create', 'edit', 'show']);
     // role route

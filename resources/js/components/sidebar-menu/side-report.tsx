@@ -1,4 +1,4 @@
-import { FileBox, FileChartColumn, FileChartPie, FileSliders, FileText, FileX2 } from "lucide-react";
+import { FileBox, FileChartColumn, FileChartPie, FileSliders, FileText, FileX2, Receipt, ReceiptText } from "lucide-react";
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -9,13 +9,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Link } from "@inertiajs/react";
 import hasAnyPermission from "@/utils/has-permissions";
-
-type sideReportProps = {
-    url : string;
-    setOpenMobile : (open: boolean) => void
-}
-
-export function SideReport({ url, setOpenMobile } : sideReportProps) {
+export function SideReport({ url, setOpenMobile } : { url: string, setOpenMobile: any }) {
     return (
         <SidebarGroup>
             {(
@@ -28,8 +22,8 @@ export function SideReport({ url, setOpenMobile } : sideReportProps) {
                 <SidebarMenu>
                     {hasAnyPermission(['report-card-stocks']) &&
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Laporan Kartu Stok"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
+                            <SidebarMenuButton asChild tooltip={"Laporan Kartu Stok"} isActive={url.startsWith('/apps/reports/card-stocks')}>
+                                <Link href={route('apps.reports.card-stocks')} onClick={() => setOpenMobile(false)}>
                                     <FileChartColumn/>
                                     <span>Kartu Stok</span>
                                 </Link>
@@ -38,8 +32,8 @@ export function SideReport({ url, setOpenMobile } : sideReportProps) {
                     }
                     {hasAnyPermission(['report-stocks']) &&
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Laporan Sisa Stok"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
+                            <SidebarMenuButton asChild tooltip={"Laporan Sisa Stok"} isActive={url.startsWith('/apps/reports/stocks')}>
+                                <Link href={route('apps.reports.stocks')} onClick={() => setOpenMobile(false)}>
                                     <FileChartPie/>
                                     <span>Sisa Stok</span>
                                 </Link>
@@ -48,8 +42,8 @@ export function SideReport({ url, setOpenMobile } : sideReportProps) {
                     }
                     {hasAnyPermission(['report-orders']) &&
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Laporan Pembelian"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
+                            <SidebarMenuButton asChild tooltip={"Laporan Pembelian"} isActive={url.startsWith('/apps/reports/orders')}>
+                                <Link href={route('apps.reports.orders')} onClick={() => setOpenMobile(false)}>
                                     <FileSliders/>
                                     <span>Pembelian</span>
                                 </Link>
@@ -58,8 +52,8 @@ export function SideReport({ url, setOpenMobile } : sideReportProps) {
                     }
                     {hasAnyPermission(['report-pending-order-receives']) &&
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Laporan Pembelian belum diterima"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
+                            <SidebarMenuButton asChild tooltip={"Laporan Pembelian belum diterima"} isActive={url.startsWith('/apps/reports/pending-order-receives')}>
+                                <Link href={route('apps.reports.pending-order-receives')} onClick={() => setOpenMobile(false)}>
                                     <FileX2/>
                                     <span>Pembelian Belum Diterima</span>
                                 </Link>
@@ -68,8 +62,8 @@ export function SideReport({ url, setOpenMobile } : sideReportProps) {
                     }
                     {hasAnyPermission(['report-sales']) &&
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Laporan Penjualan"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
+                            <SidebarMenuButton asChild tooltip={"Laporan Penjualan"} isActive={url.startsWith('/apps/reports/sales')}>
+                                <Link href={route('apps.reports.sales')} onClick={() => setOpenMobile(false)}>
                                     <FileText/>
                                     <span>Penjualan</span>
                                 </Link>
@@ -78,8 +72,8 @@ export function SideReport({ url, setOpenMobile } : sideReportProps) {
                     }
                     {hasAnyPermission(['report-best-selling-products']) &&
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Laporan Produk Terlaris"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
+                            <SidebarMenuButton asChild tooltip={"Laporan Produk Terlaris"} isActive={url.startsWith('/apps/reports/best-selling-products')}>
+                                <Link href={route('apps.reports.best-selling-products')} onClick={() => setOpenMobile(false)}>
                                     <FileBox/>
                                     <span>Produk Terlaris</span>
                                 </Link>
