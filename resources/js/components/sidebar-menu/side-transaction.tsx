@@ -1,4 +1,4 @@
-import { Box, NotebookPen, Package, ReceiptText, ShoppingBag, Tags } from "lucide-react";
+import { ReceiptText, ShoppingBag } from "lucide-react";
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -11,37 +11,48 @@ import { Link } from "@inertiajs/react";
 import hasAnyPermission from "@/utils/has-permissions";
 
 type sideTransactionProps = {
-    url : string;
-    setOpenMobile : (open : boolean) => void
-}
-export function SideTransaction({ url, setOpenMobile } : sideTransactionProps) {
+    url: string;
+    setOpenMobile: (open: boolean) => void;
+};
+export function SideTransaction({ url, setOpenMobile }: sideTransactionProps) {
     return (
         <SidebarGroup>
-            {(hasAnyPermission(['sales-data']) || hasAnyPermission(['orders-data'])) && (
+            {(hasAnyPermission(["sales-data"]) ||
+                hasAnyPermission(["orders-data"])) && (
                 <SidebarGroupLabel>Transaksi</SidebarGroupLabel>
             )}
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {hasAnyPermission(['sales-data']) &&
+                    {hasAnyPermission(["sales-data"]) && (
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild tooltip={"Penjualan"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
-                                    <ReceiptText/>
+                                <Link
+                                    href=""
+                                    onClick={() => setOpenMobile(false)}
+                                >
+                                    <ReceiptText />
                                     <span>Penjualan</span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
-                    }
-                    {hasAnyPermission(['orders-data']) &&
+                    )}
+                    {hasAnyPermission(["orders-data"]) && (
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={"Pembelian"}>
-                                <Link href='' onClick={() => setOpenMobile(false)}>
-                                    <ShoppingBag/>
+                            <SidebarMenuButton
+                                asChild
+                                tooltip={"Pembelian"}
+                                isActive={url.startsWith("/apps/orders")}
+                            >
+                                <Link
+                                    href={route("apps.orders.index")}
+                                    onClick={() => setOpenMobile(false)}
+                                >
+                                    <ShoppingBag />
                                     <span>Pembelian</span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
-                    }
+                    )}
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
