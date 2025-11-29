@@ -36,14 +36,11 @@ class OrderController extends Controller implements HasMiddleware
      */
     public function index(Request $request)
     {
-        // request page data
         $currentPage = $request->input('page', 1);
         $perPage = $request->input('per_page', 10);
 
-        // get all supplier data
         $suppliers = Supplier::query()->select('id', 'name', 'code')->get();
 
-        // get all order data
         $orders = Order::query()
             ->search()
             ->with('supplier')
@@ -52,14 +49,12 @@ class OrderController extends Controller implements HasMiddleware
             ->paginate($perPage, ['*'], 'page', $currentPage)
             ->withQueryString();
 
-        // transform data
         $orders->getCollection()->transform(function ($item) {
             $item->total_amount = number_format($item->total_amount, 0, ',', '.');
 
             return $item;
         });
 
-        // render view
         return inertia('apps/orders/index', [
             'orders' => $orders,
             'currentPage' => $currentPage,
@@ -73,16 +68,13 @@ class OrderController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        // get all supplier data
         $suppliers = Supplier::query()->select('id', 'name', 'code')->get();
 
-        // get all product data
         $products = Product::query()
             ->select('id', 'name')
             ->orderBy('products.name')
             ->get();
 
-        // render view
         return inertia('apps/orders/create', [
             'suppliers' => $suppliers,
             'products' => $products
@@ -94,7 +86,6 @@ class OrderController extends Controller implements HasMiddleware
      */
     public function store(OrderRequest $request)
     {
-        // create new order
         $order = Order::create([
             'order_code' => $request->order_code,
             'supplier_id' => $request->supplier_id,
@@ -105,7 +96,6 @@ class OrderController extends Controller implements HasMiddleware
             'status_changed_by' => $request->user()->id,
         ]);
 
-        // create order detail
         collect($request->items)->each(function ($item) use ($order) {
             $order->order_details()->create([
                 'product_unit_id' => $item['product_unit'],
@@ -114,7 +104,6 @@ class OrderController extends Controller implements HasMiddleware
             ]);
         });
 
-        // render view
         return to_route('apps.orders.index');
     }
 
@@ -123,7 +112,6 @@ class OrderController extends Controller implements HasMiddleware
      */
     public function show(order $order)
     {
-        // load relationship
         $order->load('supplier', 'order_details', 'order_details.product_unit', 'order_details.product_unit.product', 'order_details.product_unit.unit');
 
         $order->total_amount = number_format($order->total_amount, 0, ',', '.');
@@ -142,17 +130,14 @@ class OrderController extends Controller implements HasMiddleware
      */
     public function edit(order $order)
     {
-        // get all supplier data
         $suppliers = Supplier::query()->select('id', 'name', 'code')->get();
 
-        // get all product data
         $products = Product::query()
             ->select('id', 'name')
             ->orderBy('products.name')
             ->with('product_units')
             ->get();
 
-        // load relationship
         $order->load([
             'supplier',
             'order_details',
@@ -163,7 +148,6 @@ class OrderController extends Controller implements HasMiddleware
             'order_details.product_unit.product.product_units.unit'
         ]);
 
-        // render view
         return inertia('apps/orders/edit', [
             'order' => $order,
             'suppliers' => $suppliers,
@@ -176,26 +160,21 @@ class OrderController extends Controller implements HasMiddleware
      */
     public function update(OrderRequest $request, order $order)
     {
-        // update purchase order
         $order->update([
-            'purchase_code' => $request->purchase_code,
+            'order_code' => $request->order_code,
             'supplier_id' => $request->supplier_id,
             'order_date' => $request->order_date,
             'status' => 'pending',
             'total_amount' => $request->grand_price
         ]);
 
-        // get purchase order detail
         $currentDetails = $order->order_details()->get()->keyBy('product_unit_id');
 
-        // new details from request
         $newDetails = collect($request->items)->keyBy('product_unit');
 
-        // get difference details
         $toKeep = [];
         $toDelete = $currentDetails->keys()->diff($newDetails->keys());
 
-        // compare old and new details
         $newDetails->each(function ($item, $productUnitId) use ($currentDetails, &$toKeep, $toDelete) {
             if ($currentDetails->has($productUnitId)) {
                 $existing = $currentDetails[$productUnitId];
@@ -207,13 +186,11 @@ class OrderController extends Controller implements HasMiddleware
             }
         });
 
-        // delete old details
         $order->order_details()->whereIn('product_unit_id', $toDelete)
             ->update(['deleted_by' => $request->user()->id]);
         $order->order_details()->whereIn('product_unit_id', $toDelete)
             ->delete();
 
-        // add new details
         $newDetails->except($toKeep)->each(function ($item) use ($order) {
             $order->order_details()->create([
                 'product_unit_id' => $item['product_unit'],
@@ -222,7 +199,6 @@ class OrderController extends Controller implements HasMiddleware
             ]);
         });
 
-        // render view
         return to_route('apps.orders.index');
     }
 
