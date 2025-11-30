@@ -101,37 +101,40 @@ export function AppNavbar() {
         },
         {
             name: 'Laporan',
-            isActive: '',
+            isActive:
+                url.startsWith('/apps/reports/card-stocks') || url.startsWith('/apps/reports/stocks') ||
+                url.startsWith('/apps/reports/orders') || url.startsWith('/apps/reports/pending-order-receives') ||
+                url.startsWith('/apps/reports/sales') || url.startsWith('/apps/reports/best-selling-products'),
             subItems: [
                 {
                     name: 'Kartu Stok',
-                    isActive: '',
-                    href: ''
+                    isActive: url.startsWith('/apps/reports/card-stocks'),
+                    href: route('apps.reports.card-stocks')
                 },
                 {
                     name: 'Sisa Stok',
-                    isActive: '',
-                    href: ''
+                    isActive: url.startsWith('/apps/reports/stocks'),
+                    href: route('apps.reports.stocks')
                 },
                 {
                     name: 'Pembelian',
-                    isActive: '',
-                    href: ''
+                    isActive: url.startsWith('/apps/reports/orders'),
+                    href: route('apps.reports.orders')
                 },
                 {
                     name: 'Pembelian Belum Diterima',
-                    isActive: '',
-                    href: ''
+                    isActive: url.startsWith('/apps/reports/pending-order-receives'),
+                    href: route('apps.reports.pending-order-receives')
                 },
                 {
                     name: 'Penjualan',
-                    isActive: '',
-                    href: ''
+                    isActive: url.startsWith('/apps/reports/sales'),
+                    href: route('apps.reports.sales')
                 },
                 {
                     name: 'Produk Terlaris',
-                    isActive: '',
-                    href: ''
+                    isActive: url.startsWith('/apps/reports/best-selling-products'),
+                    href: route('apps.reports.best-selling-products')
                 },
             ],
         }
