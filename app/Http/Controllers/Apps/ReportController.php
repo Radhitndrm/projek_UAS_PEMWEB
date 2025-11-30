@@ -235,8 +235,7 @@ class ReportController extends Controller implements HasMiddleware
                 'lastMonthStock' => $lastMonthStock,
                 'total' => $total,
             ];
-
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $response['message'] = 'An error occurred: ' . $e->getMessage();
             $response['code'] = 500;
         }
@@ -256,7 +255,11 @@ class ReportController extends Controller implements HasMiddleware
         $response = [
             'message' => null,
             'code' => 522,
-            'data' => null,
+            'data' => [
+                'category' => null,
+                'date' => null,
+                'products' => [],
+            ],
         ];
 
         try {
@@ -281,15 +284,24 @@ class ReportController extends Controller implements HasMiddleware
                     'units.name as unit',
                     'product_units.barcode',
                     DB::raw('(
-                        SUM(CASE WHEN stock_movements.type IN ("initial", "in") THEN stock_movements.quantity ELSE 0 END)
-                        -
-                        SUM(CASE WHEN stock_movements.type = "out" THEN stock_movements.quantity ELSE 0 END)
-                    ) as remaining_stock')
+                SUM(CASE WHEN stock_movements.type IN ("initial", "in") THEN stock_movements.quantity ELSE 0 END)
+                -
+                SUM(CASE WHEN stock_movements.type = "out" THEN stock_movements.quantity ELSE 0 END)
+            ) as remaining_stock')
                 )
                 ->when($selectedCategory !== 'all', function ($query) use ($selectedCategory) {
                     return $query->where('products.category_id', $selectedCategory);
                 })
-                ->groupBy('products.sku', 'products.id', 'product_units.id')
+                ->groupBy(
+                    'products.sku',
+                    'products.id',
+                    'product_units.id',
+                    'categories.name',
+                    'products.name',
+                    'product_units.name',
+                    'units.name',
+                    'product_units.barcode'
+                )
                 ->having('remaining_stock', '>', 0)
                 ->get();
 
@@ -314,27 +326,21 @@ class ReportController extends Controller implements HasMiddleware
                 ];
             }
 
-            if(count($stockReport) > 0){
-                $response['message'] = 'Success';
-                $response['code'] = 200;
-                $response['data'] = [
-                    'category' => $selectedCategory,
-                    'date' => $selectedDate,
-                    'products' => array_values($data),
-                ];
-            }else{
-                $response['message'] = 'Data not found';
-                $response['code'] = 404;
-                $response['data'] = [
-                    'category' => $selectedCategory,
-                    'date' => $selectedDate,
-                    'products' => [],
-                ];
-            }
-
+            $response['message'] = count($stockReport) > 0 ? 'Success' : 'Data not found';
+            $response['code'] = count($stockReport) > 0 ? 200 : 404;
+            $response['data'] = [
+                'category' => $selectedCategory,
+                'date' => $selectedDate,
+                'products' => array_values($data),
+            ];
         } catch (\Exception $e) {
             $response['message'] = 'An error occurred: ' . $e->getMessage();
             $response['code'] = 500;
+            $response['data'] = [
+                'category' => $selectedCategory ?? null,
+                'date' => $selectedDate ?? null,
+                'products' => [],
+            ];
         }
 
         return response()->json($response, 200);
@@ -364,7 +370,7 @@ class ReportController extends Controller implements HasMiddleware
             'data' => null,
         ];
 
-        try{
+        try {
             $startDate = $request->from;
             $endDate = $request->to;
 
@@ -380,24 +386,23 @@ class ReportController extends Controller implements HasMiddleware
                 ->whereBetween('order_date', [$startDate, $endDate])
                 ->get();
 
-            $orders->each(function($order) {
-                $order->order_details->each(function($orderDetail) {
-                    $orderDetail->total_price = number_format($orderDetail->unit_price * $orderDetail->quantity, '0', ',', '.');
-                    $orderDetail->unit_price = number_format($orderDetail->unit_price, '0', ',', '.');
+            $orders->each(function ($order) {
+                $order->order_details->each(function ($orderDetail) {
+                    $orderDetail->total_price = number_format($orderDetail->price * $orderDetail->quantity, '0', ',', '.');
+                    $orderDetail->price = number_format($orderDetail->price, '0', ',', '.');
                 });
             });
 
-            if(count($orders) > 0){
+            if (count($orders) > 0) {
                 $response['message'] = 'Success';
                 $response['code'] = 200;
                 $response['data'] = $orders;
-            }else{
+            } else {
                 $response['message'] = 'Data not found';
                 $response['code'] = 404;
                 $response['data'] = [];
             }
-
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $response['message'] = 'An error occurred: ' . $e->getMessage();
             $response['code'] = 500;
         }
@@ -429,7 +434,7 @@ class ReportController extends Controller implements HasMiddleware
             'data' => null,
         ];
 
-        try{
+        try {
             $startDate = $request->from;
             $endDate = $request->to;
             $supplier = $request->supplier;
@@ -437,24 +442,28 @@ class ReportController extends Controller implements HasMiddleware
             $orders = Order::with('supplier')
                 ->withCount('order_details')
                 ->where('status', 'success')
-                ->when($supplier, function($query, $supplier) {
+                ->when($supplier, function ($query, $supplier) {
                     return $query->where('supplier_id', $supplier);
-                })->whereDoesntHave('order_receives', function($query){
+                })->whereDoesntHave('order_receives', function ($query) {
                     $query->where('status', 'success');
                 })
-                ->whereBetween('order_date', [$startDate, $endDate])->get();
+                ->whereBetween('order_date', [$startDate, $endDate])->get()->map(function ($order) {
+                    $order->total_amount = number_format($order->total_amount, 0, ',', '.');
 
-            if(count($orders) > 0){
+                    return $order;
+                });
+
+
+            if (count($orders) > 0) {
                 $response['message'] = 'Success';
                 $response['code'] = 200;
                 $response['data'] = $orders;
-            }else{
+            } else {
                 $response['message'] = 'Data not found';
                 $response['code'] = 404;
                 $response['data'] = [];
             }
-
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $response['message'] = 'An error occurred: ' . $e->getMessage();
             $response['code'] = 500;
         }
@@ -485,7 +494,7 @@ class ReportController extends Controller implements HasMiddleware
             'data' => null,
         ];
 
-        try{
+        try {
             $startDate = $request->from;
             $endDate = $request->to;
 
@@ -499,24 +508,24 @@ class ReportController extends Controller implements HasMiddleware
                 ->whereBetween('sale_date', [$startDate, $endDate])
                 ->get();
 
-            $sales->each(function($sale) {
-                $sale->sale_details->each(function($saleDetail) {
-                    $saleDetail->total_price = number_format($saleDetail->price * $saleDetail->quantity, '0', ',', '.');
-                    $saleDetail->price = number_format($saleDetail->price, '0', ',', '.');
+            $sales->each(function ($sale) {
+                $sale->formatted_amount = number_format($sale->total_amount, 0, ',', '.');
+                $sale->sale_details->each(function ($saleDetail) {
+                    $saleDetail->total_price = number_format($saleDetail->price * $saleDetail->quantity, 0, ',', '.');
+                    $saleDetail->price = number_format($saleDetail->price, 0, ',', '.');
                 });
             });
 
-            if(count($sales) > 0){
+            if (count($sales) > 0) {
                 $response['message'] = 'Success';
                 $response['code'] = 200;
                 $response['data'] = $sales;
-            }else{
+            } else {
                 $response['message'] = 'Data not found';
                 $response['code'] = 404;
                 $response['data'] = [];
             }
-
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $response['message'] = 'An error occurred: ' . $e->getMessage();
             $response['code'] = 500;
         }
@@ -527,9 +536,9 @@ class ReportController extends Controller implements HasMiddleware
     public function bestSellingProductView()
     {
         $sale = Sale::query()
-        ->select('id', 'sale_date')
-        ->orderBy('sale_date', 'asc')
-        ->value('sale_date');
+            ->select('id', 'sale_date')
+            ->orderBy('sale_date', 'asc')
+            ->value('sale_date');
 
         $today = Carbon::now()->format('Y-m-d');
 
@@ -547,20 +556,20 @@ class ReportController extends Controller implements HasMiddleware
             'data' => null,
         ];
 
-        try{
+        try {
             $startDate = $request->from;
             $endDate = $request->to;
 
-            $bestSellingProduct =  SaleDetail::query()
+            $bestSellingProduct = SaleDetail::query()
                 ->select(
-                    'products.sku',
-                    'products.name as product_name',
-                    'product_units.name as unit_name',
-                    'product_units.barcode',
-                    'units.name as unit',
-                    'sale_details.price',
+                    DB::raw('MIN(products.sku) as sku'),
+                    DB::raw('MIN(products.name) as product_name'),
+                    DB::raw('MIN(product_units.name) as unit_name'),
+                    DB::raw('MIN(product_units.barcode) as barcode'),
+                    DB::raw('MIN(units.name) as unit'),
+                    DB::raw('MIN(sale_details.price) as price'),
                     DB::raw('SUM(sale_details.price * sale_details.quantity) as total_revenue'),
-                    DB::raw('SUM(sale_details.quantity) as total_sale'),
+                    DB::raw('SUM(sale_details.quantity) as total_sale')
                 )
                 ->join('product_units', 'sale_details.product_unit_id', '=', 'product_units.id')
                 ->join('units', 'product_units.unit_id', '=', 'units.id')
@@ -568,26 +577,26 @@ class ReportController extends Controller implements HasMiddleware
                 ->join('sales', 'sale_details.sale_id', '=', 'sales.id')
                 ->whereBetween('sale_date', [$startDate, $endDate])
                 ->groupBy('product_units.id')
-                ->orderBy('total_sale', 'desc')
-                ->orderBy('total_revenue', 'desc')
-                ->get()->map(function($item) {
-                    $item->total_sale = number_format($item->total_sale, '0', ',', '.');
-                    $item->price = number_format($item->price, '0', ',', '.');
-                    $item->total_revenue_formatted = number_format($item->total_revenue, '0', ',', '.');
+                ->orderBy('total_sale', 'DESC')
+                ->orderBy('total_revenue', 'DESC')
+                ->get()
+                ->map(function ($item) {
+                    $item->total_sale = number_format($item->total_sale, 0, ',', '.');
+                    $item->price = number_format($item->price, 0, ',', '.');
+                    $item->total_revenue_formatted = number_format($item->total_revenue, 0, ',', '.');
                     return $item;
                 });
 
-            if(count($bestSellingProduct) > 0){
+            if ($bestSellingProduct->count() > 0) {
                 $response['message'] = 'Success';
                 $response['code'] = 200;
                 $response['data'] = $bestSellingProduct;
-            }else{
+            } else {
                 $response['message'] = 'Data not found';
                 $response['code'] = 404;
                 $response['data'] = [];
             }
-
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $response['message'] = 'An error occurred: ' . $e->getMessage();
             $response['code'] = 500;
         }

@@ -27,13 +27,13 @@ export default function Index() {
 
     return (
         <>
-            <Head title='Penjualan'/>
+            <Head title='Penjualan' />
             <div className='w-full'>
                 <Header title='Penjualan' subtitle='Halaman ini digunakan untuk mengelola data penjualan'>
                     {hasAnyPermission(['sales-create']) &&
                         <Button asChild variant='outline'>
                             <Link href={route('apps.sales.create')}>
-                                <PlusCircle className="size-4"/> <span className="hidden sm:inline-flex">Tambah Data Penjualan</span>
+                                <PlusCircle className="size-4" /> <span className="hidden sm:inline-flex">Tambah Data Penjualan</span>
                             </Link>
                         </Button>
                     }
@@ -62,7 +62,7 @@ export default function Index() {
                             </TableHeader>
                             <TableBody>
                                 {sales.data.length === 0 ? (
-                                    <TableEmpty colSpan={8} message='Data penjualan'/>
+                                    <TableEmpty colSpan={8} message='Data penjualan' />
                                 ) : (
                                     sales.data.map((sale, index) => (
                                         <TableRow key={sale.id}>
@@ -72,7 +72,7 @@ export default function Index() {
                                             <TableCell className='capitalize'>{sale.customer}</TableCell>
                                             <TableCell>{sale.payment_method}</TableCell>
                                             <TableCell className='text-right'>
-                                                <sup>Rp</sup> {sale.formated_amount}
+                                                <sup>Rp</sup> {sale.total_amount}
                                             </TableCell>
                                             <TableCell>
                                                 {sale.user.name}
@@ -94,11 +94,11 @@ export default function Index() {
                             </TableBody>
                         </Table>
                     </TableCard>
-                    <PagePagination data={sales}/>
+                    <PagePagination data={sales} />
                 </div>
             </div>
         </>
     )
 }
 
-Index.layout = (page : React.ReactNode) => <AppLayout children={page} />
+Index.layout = (page: React.ReactNode) => <AppLayout children={page} />

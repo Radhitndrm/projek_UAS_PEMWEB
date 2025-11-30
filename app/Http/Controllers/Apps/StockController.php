@@ -34,7 +34,7 @@ class StockController extends Controller implements HasMiddleware
 
         // get all product data
         $products = Product::query()
-            ->whereHas('product_units', function($query) use($alreadyHaveInitialStock){
+            ->whereHas('product_units', function ($query) use ($alreadyHaveInitialStock) {
                 $query->whereNotIn('id', $alreadyHaveInitialStock);
             })
             ->select('id', 'name')
