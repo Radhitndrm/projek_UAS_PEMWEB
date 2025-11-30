@@ -44,3 +44,4 @@ class Sale extends Model
         return $query;
     }
 }
+

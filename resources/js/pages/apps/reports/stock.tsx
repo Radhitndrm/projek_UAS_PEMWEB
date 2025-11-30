@@ -52,8 +52,8 @@ export default function Stock() {
     });
 
     const submit = async () => {
-        try{
-            if(!selectedCategory || !selectedDate){
+        try {
+            if (!selectedCategory || !selectedDate) {
                 toast({
                     variant: 'destructive',
                     title: "Error",
@@ -72,7 +72,7 @@ export default function Stock() {
             });
 
             setTimeout(() => {
-                if(response.data.code === 200)
+                if (response.data.code === 200)
                     toast({
                         'variant': 'success',
                         'title': 'Success',
@@ -84,19 +84,20 @@ export default function Stock() {
                         'title': 'Error',
                         'description': 'Data tidak ditemukan!',
                     })
-                setReportsData(response.data.data);
+
+                setReportsData(response.data.data ?? { category: '', date: '', products: [] });
                 setLoading(false);
             }, 2000)
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
     }
 
-    const subtotal = (data : ProductDetail[]) : number => {
+    const subtotal = (data: ProductDetail[]): number => {
         return data.reduce((sum, item) => sum + item.remaining_stock, 0);
     }
 
-    const grandTotal = (data : Product[]) : number => {
+    const grandTotal = (data: Product[]): number => {
         return data.reduce((grandTotal, item) => {
             const itemTotal = item.details.reduce((sum, detail) => sum + detail.remaining_stock, 0);
             return grandTotal + itemTotal;
@@ -105,20 +106,20 @@ export default function Stock() {
 
     return (
         <>
-            <Head title='Laporan Sisa Stok'/>
+            <Head title='Laporan Sisa Stok' />
             <div className='w-full'>
-                <Header title='Laporan Sisa Stok' subtitle='Halaman ini digunakan untuk melihat laporan sisa stok'/>
+                <Header title='Laporan Sisa Stok' subtitle='Halaman ini digunakan untuk melihat laporan sisa stok' />
                 <div className='p-6'>
                     <div className='flex flex-col lg:flex-row gap-4'>
                         <div className='w-full lg:w-1/3 flex flex-col gap-2'>
                             <Label>Tanggal <span className='text-rose-500'>*</span></Label>
-                            <DatePicker date={selectedDate} setDate={setSelectedDate} label='Pilih Tanggal'/>
+                            <DatePicker date={selectedDate} setDate={setSelectedDate} label='Pilih Tanggal' />
                         </div>
                         <div className='w-full lg:w-1/3 flex flex-col gap-2'>
                             <Label>Kategori <span className='text-rose-500'>*</span></Label>
                             <Select value={selectedCategory} onValueChange={(e) => setSelectedCategory(e)}>
                                 <SelectTrigger className="w-full focus:ring-1 focus:ring-indigo-500">
-                                    <SelectValue placeholder="Pilih Kategori Produk"/>
+                                    <SelectValue placeholder="Pilih Kategori Produk" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all">
@@ -137,51 +138,51 @@ export default function Stock() {
                         </Button>
                     </div>
                     {!loading && reportsData.products.length > 0 && (
-                            <TableCard className='mt-6'>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow  className='hover:bg-transparent'>
-                                            <TableHead colSpan={5}>Produk</TableHead>
-                                        </TableRow>
-                                        <TableRow className='hover:bg-transparent bg-white dark:bg-transparent'>
-                                            <TableHead className='text-center'>SKU</TableHead>
-                                            <TableHead className='text-center'>Barcode</TableHead>
-                                            <TableHead className='text-center'>Kategori</TableHead>
-                                            <TableHead className='text-center'>Variant</TableHead>
-                                            <TableHead className='text-center'>Sisa Stok</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {reportsData.products.map((report, reportIndex) => (
-                                            <React.Fragment key={reportIndex}>
-                                                <TableRow>
-                                                    <TableCell colSpan={5} className='hover:bg-transparent bg-gray-100/50 dark:bg-gray-900/50 capitalize font-semibold text-center'>
-                                                        {report.name}
-                                                    </TableCell>
+                        <TableCard className='mt-6'>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className='hover:bg-transparent'>
+                                        <TableHead colSpan={5}>Produk</TableHead>
+                                    </TableRow>
+                                    <TableRow className='hover:bg-transparent bg-white dark:bg-transparent'>
+                                        <TableHead className='text-center'>SKU</TableHead>
+                                        <TableHead className='text-center'>Barcode</TableHead>
+                                        <TableHead className='text-center'>Kategori</TableHead>
+                                        <TableHead className='text-center'>Variant</TableHead>
+                                        <TableHead className='text-center'>Sisa Stok</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {reportsData.products.map((report, reportIndex) => (
+                                        <React.Fragment key={reportIndex}>
+                                            <TableRow>
+                                                <TableCell colSpan={5} className='hover:bg-transparent bg-gray-100/50 dark:bg-gray-900/50 capitalize font-semibold text-center'>
+                                                    {report.name}
+                                                </TableCell>
+                                            </TableRow>
+                                            {report.details.map((detail, detailIndex) => (
+                                                <TableRow key={`${reportIndex}-${detailIndex}`}>
+                                                    <TableCell>{detail.sku}</TableCell>
+                                                    <TableCell>{detail.barcode}</TableCell>
+                                                    <TableCell>{detail.category}</TableCell>
+                                                    <TableCell>{detail.name} {detail.product_unit}</TableCell>
+                                                    <TableCell className="text-center">{detail.remaining_stock}</TableCell>
                                                 </TableRow>
-                                                {report.details.map((detail, detailIndex) => (
-                                                    <TableRow key={`${reportIndex}-${detailIndex}`}>
-                                                        <TableCell>{detail.sku}</TableCell>
-                                                        <TableCell>{detail.barcode}</TableCell>
-                                                        <TableCell>{detail.category}</TableCell>
-                                                        <TableCell>{detail.name} {detail.product_unit}</TableCell>
-                                                        <TableCell className="text-center">{detail.remaining_stock}</TableCell>
-                                                    </TableRow>
-                                                ))}
-                                                <TableRow>
-                                                    <TableCell colSpan={4} className='text-right font-semibold'>Subtotal</TableCell>
-                                                    <TableCell className='text-center font-semibold'>{subtotal(report.details)}</TableCell>
-                                                </TableRow>
-                                            </React.Fragment>
-                                        ))}
-                                        <TableRow className='hover:bg-transparent bg-gray-100/50 dark:bg-gray-900/50'>
-                                            <TableCell colSpan={4} className="text-right font-bold">GRAND TOTAL</TableCell>
-                                            <TableCell className='text-center font-bold'>{grandTotal(reportsData.products)}</TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableCard>
-                        )
+                                            ))}
+                                            <TableRow>
+                                                <TableCell colSpan={4} className='text-right font-semibold'>Subtotal</TableCell>
+                                                <TableCell className='text-center font-semibold'>{subtotal(report.details)}</TableCell>
+                                            </TableRow>
+                                        </React.Fragment>
+                                    ))}
+                                    <TableRow className='hover:bg-transparent bg-gray-100/50 dark:bg-gray-900/50'>
+                                        <TableCell colSpan={4} className="text-right font-bold">GRAND TOTAL</TableCell>
+                                        <TableCell className='text-center font-bold'>{grandTotal(reportsData.products)}</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableCard>
+                    )
                     }
                     {
                         loading && (
@@ -191,16 +192,16 @@ export default function Stock() {
                                         <TableRow>
                                             <TableHead colSpan={5}>
                                                 <div className='flex items-center'>
-                                                    <Skeleton className="w-24 h-4"/>
+                                                    <Skeleton className="w-24 h-4" />
                                                 </div>
                                             </TableHead>
                                         </TableRow>
                                         <TableRow>
-                                            <TableHead><Skeleton className="w-16 h-4"/></TableHead>
-                                            <TableHead><Skeleton className="w-16 h-4"/></TableHead>
-                                            <TableHead><Skeleton className="w-16 h-4"/></TableHead>
-                                            <TableHead><Skeleton className="w-16 h-4"/></TableHead>
-                                            <TableHead><Skeleton className="w-16 h-4"/></TableHead>
+                                            <TableHead><Skeleton className="w-16 h-4" /></TableHead>
+                                            <TableHead><Skeleton className="w-16 h-4" /></TableHead>
+                                            <TableHead><Skeleton className="w-16 h-4" /></TableHead>
+                                            <TableHead><Skeleton className="w-16 h-4" /></TableHead>
+                                            <TableHead><Skeleton className="w-16 h-4" /></TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -208,7 +209,7 @@ export default function Stock() {
                                             <TableRow key={i}>
                                                 {Array.from({ length: 5 }).map((_, j) => (
                                                     <TableCell key={j}>
-                                                        <Skeleton className="w-16 h-4"/>
+                                                        <Skeleton className="w-16 h-4" />
                                                     </TableCell>
                                                 ))}
                                             </TableRow>
@@ -224,4 +225,4 @@ export default function Stock() {
     )
 }
 
-Stock.layout = (page : React.ReactNode) => <AppLayout children={page} />
+Stock.layout = (page: React.ReactNode) => <AppLayout children={page} />
