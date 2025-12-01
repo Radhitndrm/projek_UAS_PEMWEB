@@ -1,5 +1,5 @@
 import React from 'react'
-import AppLayout from '@/layouts/app-layout'
+import AppLayout from '@/Layouts/app-layout'
 import { Head, usePage } from '@inertiajs/react'
 import { Header } from '@/components/header'
 import { DateRangePicker } from '@/components/ui/date-range-picker'
@@ -79,9 +79,9 @@ export default function PendingOrderReceive() {
 
     return (
         <>
-            <Head title='Laporan Pembelian Belum Diterima' />
+            <Head title='Laporan Penerimaan Belum Diterima' />
             <div className='w-full'>
-                <Header title="Laporan Pembelian Belum Diterima" subtitle="Halaman ini digunakan untuk melihat pembelian yang belum diterima" />
+                <Header title="Laporan Penerimaan Belum Diterima" subtitle="Halaman ini digunakan untuk melihat penerimaan yang belum diterima" />
                 <div className='p-6'>
                     <div className='flex flex-col lg:flex-row gap-4'>
                         <div className='w-full lg:w-1/3 flex flex-col gap-2'>

@@ -6,7 +6,7 @@ import {
     LogOut,
     Sparkles,
     Sun,
-    Moon
+    Moon,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -88,37 +88,30 @@ export function SideProfile() {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <Sparkles />
-                                Upgrade to Pro
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <BadgeCheck />
-                                Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <CreditCard />
-                                Billing
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Bell />
-                                Notifications
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator/>
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+                            <DropdownMenuItem
+                                onClick={() =>
+                                    setTheme(
+                                        theme === "light" ? "dark" : "light"
+                                    )
+                                }
+                            >
                                 <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                                 <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                                <span>{theme == 'light' ? 'Light Mode' : 'Dark Mode'}</span>
+                                <span>
+                                    {theme == "light"
+                                        ? "Light Mode"
+                                        : "Dark Mode"}
+                                </span>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
-                            <Link method="post" href={route('logout')} as="button" className="w-full">
+                            <Link
+                                method="post"
+                                href={route("logout")}
+                                as="button"
+                                className="w-full"
+                            >
                                 <LogOut />
                                 Log out
                             </Link>
